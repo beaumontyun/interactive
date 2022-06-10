@@ -1,16 +1,18 @@
 import { Suspense, useEffect, useRef, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { BoxBufferGeometry } from "three";
+import { BoxBufferGeometry, BoxHelper } from "three";
 
 import Link from "next/link";
 
-import Point from "../components/Point.js";
+// import Point from "../components/Point.js";
 
 import {
   Box,
   softShadows,
   MeshWobbleMaterial,
   OrbitControls,
+  Torus,
+  useHelper
 } from "@react-three/drei";
 
 import { useSpring, a } from "@react-spring/three";
@@ -19,6 +21,9 @@ softShadows();
 
 const SpinningBox = ({ position, args, color, speed }) => {
   const mesh = useRef(null);
+
+  useHelper(mesh, BoxHelper, "blue");
+
   useFrame(() => (mesh.current.rotation.x = mesh.current.rotation.y += 0.01));
 
   const [expand, setExpand] = useState(false);
@@ -46,10 +51,27 @@ const SpinningBox = ({ position, args, color, speed }) => {
   );
 };
 
+const SpinningTorus = ({ position, speed, color }) => {
+  const mesh = useRef(null);
+  useFrame(() => (mesh.current.rotation.x = mesh.current.rotation.y += 0.01));
+
+  return (
+    <a.mesh
+      castShadow
+      position={position}
+      ref={mesh}
+    >
+      <Torus castShadow>
+        <MeshWobbleMaterial attach="material" speed={speed} factor={0.6} color={color} />
+      </Torus>
+    </a.mesh>
+  )
+}
+
 function Interactive() {
   return (
     <div className="w-full h-full fixed">
-      <Canvas shadows camera={{ position: [-5, 2, 10], fov: 50 }}>
+      <Canvas shadows camera={{ position: [10, 3, 10], fov: 50 }}>
         <ambientLight intensity={0.3} />
         <directionalLight
           castShadow
@@ -66,9 +88,9 @@ function Interactive() {
         <pointLight position={[-10, 0, -20]} intensity={0.5} />
         <pointLight position={[0, -10, 0]} intensity={1.5} />
 
-        <Suspense fallback={null}>
+        {/* <Suspense fallback={null}>
           <Point />
-        </Suspense>
+        </Suspense> */}
 
         <group>
           <mesh
@@ -82,13 +104,16 @@ function Interactive() {
         </group>
 
         <SpinningBox
-          position={[-2, 1, -1]}
+          position={[-2, 1, 1]}
           args={[1, 1, 1]}
           color="lightgrey"
           speed={1}
         />
-        <SpinningBox position={[0, 1, 0]} color="lightpink" speed={2} />
+        <SpinningBox position={[0, 1, 1]} color="lightpink" speed={2} />
+
         <SpinningBox position={[2, 1, 1]} color="lightblue" speed={2} />
+
+        <SpinningTorus position={[5, 1, 1]} speed={2} color="lightpink" />
         {/* <Box>
           <meshStandardMaterial attach="material" />
         </Box> */}

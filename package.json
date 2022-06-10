@@ -14,12 +14,10 @@
     "@react-three/drei": "^9.12.0",
     "@react-three/fiber": "^8.0.22",
     "daisyui": "^2.15.2",
-    "drei": "^2.2.21",
     "next": "12.1.6",
     "react": "18.1.0",
     "react-dom": "18.1.0",
     "react-spring": "^9.4.5",
-    "react-three-fiber": "^6.0.13",
     "sass": "^1.52.2",
     "three": "^0.141.0"
   },
